@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Admin - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles & Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #141414;
+            color: #e5e5e5;
+            padding: 20px 0;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #2a2a2a;
+            margin-bottom: 20px;
+            color: #e50914; /* Netflix Red */
+        }
+
+        .logo span {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-link {
+            color: #e5e5e5;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2a2a2a;
+        }
+
+        .nav-link.active {
+            background-color: #2a2a2a;
+            border-left: 4px solid #e50914;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            margin-left: 8px;
+            width: 200px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-profile img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
+
+        /* Settings Page Styles */
+        .settings-container {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .settings-header h1 {
+            font-size: 1.8rem;
+            color: #141414;
+        }
+
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .settings-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .settings-tab.active {
+            border-bottom: 3px solid #e50914;
+            color: #e50914;
+            font-weight: 600;
+        }
+
+        .settings-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .settings-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .settings-card h3 {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            color: #141414;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-card h3 i {
+            color: #e50914;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #e50914;
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #e50914;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .toggle-info {
+            flex: 1;
+        }
+
+        .toggle-info h4 {
+            margin-bottom: 5px;
+            color: #141414;
+        }
+
+        .toggle-info p {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #e50914;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #b8070f;
+        }
+
+        .btn-secondary {
+            background-color: #2a2a2a;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1a1a1a;
+        }
+
+        .card-footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .select-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: white;
+        }
+
+        .region-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .region-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .region-card:hover {
+            border-color: #e50914;
+        }
+
+        .region-card.active {
+            border-color: #e50914;
+            background-color: #fff5f5;
+        }
+
+        .region-card h4 {
+            margin-bottom: 5px;
+            color: #141414;
+        }
+
+        .region-card p {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        /* System Status */
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .status-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .status-card h4 {
+            margin-bottom: 10px;
+            color: #141414;
+        }
+
+        .status-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e50914;
+        }
+
+        .status-ok {
+            color: #28a745;
+        }
+
+        .status-warning {
+            color: #ffc107;
+        }
+
+        .status-error {
+            color: #e50914;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fab fa-netflix fa-2x"></i>
+                <span>Admin Dashboard</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-link"><i class="fas fa-home"></i> Overview</a>
+                <a href="#" class="nav-link"><i class="fas fa-film"></i> Content</a>
+                <a href="#" class="nav-link"><i class="fas fa-users"></i> Subscribers</a>
+                <a href="#" class="nav-link"><i class="fas fa-chart-line"></i> Analytics</a>
+                <a href="#" class="nav-link active"><i class="fas fa-cog"></i> Settings</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header Bar -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Settings</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search settings...">
+                    </div>
+                    <div class="admin-profile">
+                        <img src="https://via.placeholder.com/40" alt="Admin Avatar">
+                        <span>Admin User</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Settings Content -->
+            <div class="settings-container">
+                <div class="settings-header">
+                    <h1>System Configuration</h1>
+                </div>
+
+                <div class="settings-tabs">
+                    <div class="settings-tab active">General</div>
+                    <div class="settings-tab">Security</div>
+                    <div class="settings-tab">Notifications</div>
+                    <div class="settings-tab">Appearance</div>
+                    <div class="settings-tab">Advanced</div>
+                </div>
+
+                <div class="settings-content">
+                    <!-- Account Settings -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
+                        <div class="form-group">
+                            <label for="adminName">Admin Name</label>
+                            <input type="text" id="adminName" class="form-control" value="Admin User">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminEmail">Email Address</label>
+                            <input type="email" id="adminEmail" class="form-control" value="admin@netflix.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminRole">Role</label>
+                            <select id="adminRole" class="select-control">
+                                <option>Super Administrator</option>
+                                <option>Content Manager</option>
+                                <option>Support Staff</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="timezone">Timezone</label>
+                            <select id="timezone" class="select-control">
+                                <option>Pacific Time (PT)</option>
+                                <option>Eastern Time (ET)</option>
+                                <option>Central Time (CT)</option>
+                                <option>Mountain Time (MT)</option>
+                                <option>Greenwich Mean Time (GMT)</option>
+                            </select>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">Update Profile</button>
+                        </div>
+                    </div>
+
+                    <!-- System Preferences -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-sliders-h"></i> System Preferences</h3>
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <h4>Auto-Update Content</h4>
+                                <p>Automatically update content library</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <h4>Performance Analytics</h4>
+                                <p>Collect system performance data</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <h4>Error Reporting</h4>
+                                <p>Send error reports to Netflix</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <h4>Maintenance Mode</h4>
+                                <p>Put system in maintenance mode</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">Save Preferences</button>
+                        </div>
+                    </div>
+
+                    <!-- Regional Settings -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-globe"></i> Regional Settings</h3>
+                        <div class="form-group">
+                            <label for="defaultRegion">Default Region</label>
+                            <select id="defaultRegion" class="select-control">
+                                <option>Global</option>
+                                <option>North America</option>
+                                <option>Europe</option>
+                                <option>Asia-Pacific</option>
+                                <option>Latin America</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Active Regions</label>
+                            <div class="region-grid">
+                                <div class="region-card active">
+                                    <h4>NA</h4>
+                                    <p>North America</p>
+                                </div>
+                                <div class="region-card active">
+                                    <h4>EU</h4>
+                                    <p>Europe</p>
+                                </div>
+                                <div class="region-card">
+                                    <h4>APAC</h4>
+                                    <p>Asia-Pacific</p>
+                                </div>
+                                <div class="region-card active">
+                                    <h4>LATAM</h4>
+                                    <p>Latin America</p>
+                                </div>
+                                <div class="region-card">
+                                    <h4>MEA</h4>
+                                    <p>Middle East & Africa</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">Update Regions</button>
+                        </div>
+                    </div>
+
+                    <!-- System Status -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-heartbeat"></i> System Status</h3>
+                        <div class="status-cards">
+                            <div class="status-card">
+                                <h4>CPU Usage</h4>
+                                <div class="status-value status-ok">24%</div>
+                            </div>
+                            <div class="status-card">
+                                <h4>Memory</h4>
+                                <div class="status-value status-ok">62%</div>
+                            </div>
+                            <div class="status-card">
+                                <h4>Storage</h4>
+                                <div class="status-value status-warning">78%</div>
+                            </div>
+                            <div class="status-card">
+                                <h4>Uptime</h4>
+                                <div class="status-value status-ok">99.9%</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="systemHealth">System Health</label>
+                            <div class="progress-bar" style="height: 10px; background: #eee; border-radius: 5px; overflow: hidden; margin-top: 5px;">
+                                <div style="height: 100%; width: 92%; background: #28a745;"></div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-secondary">Refresh Status</button>
+                            <button class="btn btn-primary">Run Diagnostics</button>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-shield-alt"></i> Security Settings</h3>
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <h4>Two-Factor Authentication</h4>
+                                <p>Require 2FA for all admin users</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <h4>Password Expiration</h4>
+                                <p>Require password change every 90 days</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <h4>IP Whitelisting</h4>
+                                <p>Restrict access to specific IP addresses</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="sessionTimeout">Session Timeout</label>
+                            <select id="sessionTimeout" class="select-control">
+                                <option>15 minutes</option>
+                                <option>30 minutes</option>
+                                <option>1 hour</option>
+                                <option selected>2 hours</option>
+                                <option>4 hours</option>
+                            </select>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">Update Security</button>
+                        </div>
+                    </div>
+
+                    <!-- Backup & Restore -->
+                    <div class="settings-card">
+                        <h3><i class="fas fa-database"></i> Backup & Restore</h3>
+                        <div class="form-group">
+                            <label for="backupFrequency">Backup Frequency</label>
+                            <select id="backupFrequency" class="select-control">
+                                <option>Daily</option>
+                                <option selected>Weekly</option>
+                                <option>Monthly</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="backupRetention">Retention Period</label>
+                            <select id="backupRetention" class="select-control">
+                                <option>7 days</option>
+                                <option selected>30 days</option>
+                                <option>90 days</option>
+                            </select>
+                        </div>
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <h4>Cloud Backup</h4>
+                                <p>Store backups in secure cloud storage</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Backup</label>
+                            <p style="margin-top: 5px; color: #6c757d;">September 28, 2023 at 02:30 AM</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-secondary">Backup Now</button>
+                            <button class="btn btn-primary">Restore</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple JavaScript for interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight active nav link on click
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Settings tabs functionality
+            const settingsTabs = document.querySelectorAll('.settings-tab');
+            settingsTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    settingsTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Region selection functionality
+            const regionCards = document.querySelectorAll('.region-card');
+            regionCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+            
+            // Save buttons functionality
+            const saveButtons = document.querySelectorAll('.btn-primary');
+            saveButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const card = this.closest('.settings-card');
+                    const cardTitle = card.querySelector('h3').textContent;
+                    
+                    // Show a temporary success message
+                    const originalText = this.textContent;
+                    this.innerHTML = '<i class="fas fa-check"></i> Saved!';
+                    this.style.backgroundColor = '#28a745';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.style.backgroundColor = '';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
