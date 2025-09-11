@@ -1,5 +1,4 @@
 const API_URL = "http://localhost:8080/v1/movies";
-const TOKEN = getCookie("token");
 const TMDB_KEY = "8eaf4b353f53d2952b8fb3f8bedbbddd";
 const SUBTITLEAPI = "https://managapi-eak67.kinsta.app/download_subtitles?name="
 
@@ -8,12 +7,6 @@ let currentPage = 0;
 let totalPages = 1;
 const pageSize = 16;
 let genreMap = {};
-
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
 
 // Load genres mapping once
 async function loadGenres() {
@@ -26,6 +19,8 @@ async function loadGenres() {
 
 // ================== Load Movies ==================
 async function loadMovies(page = 0) {
+    const TOKEN = await getClerkToken();
+    console.log("Token in admin_home.js:", TOKEN);
     const response = await fetch(`${API_URL}/all?page=${page}&size=${pageSize}`, {
         headers: { "Authorization": `Bearer ${TOKEN}` }
     });
@@ -85,8 +80,10 @@ function openAddModal() {
     modal.style.display = "flex";
 }
 
-function deleteMovie(id) {
+async function deleteMovie(id) {
     if (!confirm("Are you sure you want to delete this movie?")) return;
+    
+    const TOKEN = await getClerkToken();
     fetch(`${API_URL}/delete/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${TOKEN}` }
@@ -217,6 +214,7 @@ form.addEventListener("submit", async function(e) {
         url = API_URL+"/add";
     }
     
+    const TOKEN = await getClerkToken();
     const response = await fetch(url, {
         method,
         headers: {
@@ -249,5 +247,15 @@ form.addEventListener("submit", async function(e) {
     }
 });
 
-// Initial load
-loadMovies();
+// Initialize Clerk and load movies
+function initClerk() {
+if (!window.Clerk) {
+    console.error("Clerk script not loaded yet!");
+    return;
+}
+//Clerk.load().then(loadMovies);
+Clerk.load().then(() => {
+    getUserImage().then(setAdminAvatar);
+    loadGenres().then(() => loadMovies());
+});
+}

@@ -35,6 +35,12 @@ public class MovieController {
         return ResponseEntity.ok(new ApiResponse(200, "OK", movieService.deleteMovie(id)));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/views-count")
+    public ResponseEntity<ApiResponse> getMostViewedMovies() {
+        return ResponseEntity.ok(new ApiResponse(200, "OK", movieService.getTotalViews()));
+    }
+
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllMovies(

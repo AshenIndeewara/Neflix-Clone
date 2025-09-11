@@ -1,36 +1,34 @@
-// Get JWT token from cookies
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-// Get page number from URL query parameter
-function getPageFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    const page = parseInt(params.get("page")) || 1; // default to page 1
-    return page;
-}
-
-// Load movies from API
+// Get Clerk token instead of old JWT cookie
 async function loadMovies() {
     try {
-        const token = getCookie("token");
+        const token = await getClerkToken(); // <-- Clerk token
+        if (!token) {
+            window.location.href = "login.html";
+            return;
+        }
+
         const page = getPageFromUrl() - 1; // backend pages are zero-indexed
         const size = 10;
 
         const response = await fetch(`http://localhost:8080/v1/movies/all?page=${page}&size=${size}`, {
             headers: {
-                "Authorization": `Bearer ${token}`
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
             }
         });
-        if(response.status === 403){
-            window.location.href = "login.html"
+
+        if (response.status === 403) {
+            window.location.href = "login.html";
+            return;
         }
+
         const data = await response.json();
+
         if (data.code === 402) {
             window.location.href = "payment-plan.html";
+            return;
         }
+
         const movies = data.data.content || data.content;
 
         const container = document.getElementById("trending-movies");
@@ -44,7 +42,6 @@ async function loadMovies() {
             img.src = movie.imageUrl || "https://via.placeholder.com/300x450";
             img.className = "movie-poster";
 
-            // Open player page on click
             img.addEventListener("click", () => {
                 window.location.href = `player.html?id=${movie.id}`;
             });
@@ -58,16 +55,31 @@ async function loadMovies() {
             container.appendChild(card);
         });
 
-
         // Render pagination buttons
         renderPagination(data.data.totalPages, page + 1);
 
     } catch (error) {
         console.error("Error fetching movies:", error);
+        // Redirect if any auth error
+        window.location.href = "login.html";
     }
 }
 
-// Render pagination links
+// Get Clerk token
+async function getClerkToken() {
+    await Clerk.load();
+    const session = Clerk.session;
+    if (!session) return null;
+    return await session.getToken();
+}
+
+// Get page number from URL query parameter
+function getPageFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return parseInt(params.get("page")) || 1;
+}
+
+// Pagination rendering remains the same
 function renderPagination(totalPages, currentPage) {
     let paginationContainer = document.getElementById("pagination");
     if (!paginationContainer) {
@@ -85,10 +97,11 @@ function renderPagination(totalPages, currentPage) {
         btn.addEventListener("click", () => {
             const url = new URL(window.location);
             url.searchParams.set("page", i);
-            window.location = url; // reload with new page
+            window.location = url;
         });
         paginationContainer.appendChild(btn);
     }
 }
 
+// Load movies when page loads
 document.addEventListener("DOMContentLoaded", loadMovies);

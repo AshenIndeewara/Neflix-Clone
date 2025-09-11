@@ -8,6 +8,13 @@
   <link href="https://unpkg.com/css.gg@2.0.0/icons/css/menu-grid-r.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Admin Avatar */
+    #adminAvatar {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+    }
+
     /* Floating Add Button */
     .add-movie-btn {
       position: fixed;
@@ -181,10 +188,11 @@
       </div>
       <nav class="nav-links">
         <a href="/templates/admin home.html" class="nav-link active"><i class="fas fa-home"></i> Overview</a>
-        <a href="/templates/admin-content.html" class="nav-link"><i class="fas fa-film"></i> Content</a>
         <a href="/templates/admin Subscribers.html" class="nav-link"><i class="fas fa-users"></i> Subscribers</a>
-        <a href="/templates/admin Analytics.html" class="nav-link"><i class="fas fa-chart-line"></i> Analytics</a>
-        <a href="/templates/admin Settings.html" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+        <a href="/templates/admin payment.html" class="nav-link"><i class="fas fa-credit-card"></i> Payments</a>
+        <a href="#" class="nav-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+        
       </nav>
     </aside>
 
@@ -198,7 +206,7 @@
             <input type="text" placeholder="Search...">
           </div>
           <div class="admin-profile">
-            <img src="https://via.placeholder.com/40" alt="Admin Avatar">
+            <img id="adminAvatar" src="https://via.placeholder.com/40" alt="Admin Avatar">
             <span>Admin User</span>
           </div>
         </div>
@@ -250,6 +258,14 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+<script src="../static/js/util.js"></script>
 <script src="../static/js/admin_home.js"></script>
+<!-- Clerk Script -->
+<script async
+        crossorigin="anonymous"
+        data-clerk-publishable-key="pk_test_dG9wLWdhbm5ldC05Mi5jbGVyay5hY2NvdW50cy5kZXYk"
+        src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+        onload="initClerk()">
+</script>
 </body>
 </html>

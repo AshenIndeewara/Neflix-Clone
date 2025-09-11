@@ -1,115 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Transactions - Netflix Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
-        body { background-color: #f5f5f5; color: #333; height: 100vh; overflow: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
 
-        .container { display: flex; height: 100vh; }
-        .sidebar { width: 250px; background-color: #141414; color: #e5e5e5; padding: 20px 0; }
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background-color: #f5f5f5; }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-        .logo { display: flex; align-items: center; padding: 0 20px 20px; border-bottom: 1px solid #2a2a2a; margin-bottom: 20px; color: #e50914; }
-        .logo span { margin-left: 10px; font-weight: bold; }
-        .nav-links { display: flex; flex-direction: column; }
-        .nav-link { color: #e5e5e5; text-decoration: none; padding: 15px 20px; display: flex; align-items: center; transition: background-color 0.3s; }
-        .nav-link:hover, .nav-link.active { background-color: #2a2a2a; }
-        .nav-link.active { border-left: 4px solid #e50914; }
-        .nav-link i { margin-right: 10px; width: 20px; text-align: center; }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
 
-        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header-right { display: flex; align-items: center; gap: 20px; }
-        .search-box { display: flex; align-items: center; background: #f0f0f0; padding: 8px 15px; border-radius: 20px; }
-        .search-box input { border: none; background: transparent; outline: none; margin-left: 8px; width: 200px; }
-        .admin-profile { display: flex; align-items: center; gap: 10px; }
-        .admin-profile img { border-radius: 50%; width: 40px; height: 40px; }
+        .sidebar {
+            width: 250px;
+            background-color: #141414;
+            color: #e5e5e5;
+            padding: 20px 0;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #2a2a2a;
+            margin-bottom: 20px;
+            color: #e50914;
+        }
+
+        .logo span {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-link {
+            color: #e5e5e5;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: #2a2a2a;
+        }
+
+        .nav-link.active {
+            border-left: 4px solid #e50914;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            margin-left: 8px;
+            width: 200px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-profile img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
 
         /* Payment Transactions Specific Styles */
-        .transactions-container { 
-            padding: 20px 30px; 
-            max-width: 1400px; 
+        .transactions-container {
+            padding: 20px 30px;
+            max-width: 1400px;
             margin: 0 auto;
             width: 100%;
         }
-        
+
         .transactions-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
         }
-        
+
         .transactions-header h1 {
             font-size: 28px;
             color: #141414;
         }
-        
+
         .transactions-actions {
             display: flex;
             gap: 15px;
         }
-        
-        .btn { 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             transition: all 0.3s;
         }
-        
-        .btn-primary { 
-            background-color: #e50914; 
-            color: white; 
+
+        .btn-primary {
+            background-color: #e50914;
+            color: white;
         }
-        
+
         .btn-primary:hover {
             background-color: #c40811;
         }
-        
-        .btn-secondary { 
-            background-color: #2a2a2a; 
-            color: white; 
+
+        .btn-secondary {
+            background-color: #2a2a2a;
+            color: white;
         }
-        
+
         .btn-secondary:hover {
             background-color: #3a3a3a;
         }
-        
+
         .stats-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-        
+
         .stat-card {
             background: white;
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
         .stat-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-        
+
         .stat-card-title {
             font-size: 16px;
             color: #6c757d;
             font-weight: 600;
         }
-        
+
         .stat-card-icon {
             width: 40px;
             height: 40px;
@@ -119,33 +218,33 @@
             justify-content: center;
             font-size: 16px;
         }
-        
+
         .icon-revenue {
             background-color: rgba(229, 9, 20, 0.1);
             color: #e50914;
         }
-        
+
         .icon-transactions {
             background-color: rgba(40, 167, 69, 0.1);
             color: #28a745;
         }
-        
+
         .icon-avg {
             background-color: rgba(0, 123, 255, 0.1);
             color: #007bff;
         }
-        
+
         .icon-pending {
             background-color: rgba(255, 193, 7, 0.1);
             color: #ffc107;
         }
-        
+
         .stat-card-value {
             font-size: 24px;
             font-weight: 700;
             color: #141414;
         }
-        
+
         .stat-card-change {
             font-size: 14px;
             margin-top: 5px;
@@ -153,15 +252,15 @@
             align-items: center;
             gap: 5px;
         }
-        
+
         .change-positive {
             color: #28a745;
         }
-        
+
         .change-negative {
             color: #e50914;
         }
-        
+
         .filters-bar {
             display: flex;
             justify-content: space-between;
@@ -170,21 +269,21 @@
             background: white;
             padding: 15px 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
         .filter-group {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        
+
         .filter-label {
             font-weight: 600;
             color: #495057;
             font-size: 14px;
         }
-        
+
         .filter-select {
             padding: 8px 12px;
             border: 1px solid #ddd;
@@ -192,214 +291,327 @@
             background: white;
             font-size: 14px;
         }
-        
+
         .date-filter {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .date-input {
             padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
         }
-        
-        .table-container-wrapper { 
-            margin-bottom: 20px; 
-            background: white; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            height: 500px; 
+
+        .table-container-wrapper {
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 500px;
         }
-        
-        .transactions-table-container { 
-            overflow-y: auto; 
-            flex-grow: 1; 
+
+        .transactions-table-container {
+            overflow-y: auto;
+            flex-grow: 1;
         }
-        
-        .transactions-table { 
-            width: 100%; 
-            border-collapse: collapse; 
+
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        
-        .transactions-table th { 
-            background-color: #f8f9fa; 
-            padding: 15px; 
-            text-align: left; 
-            font-weight: 600; 
-            color: #495057; 
-            border-bottom: 2px solid #e9ecef; 
-            position: sticky; 
-            top: 0; 
-            z-index: 10; 
+
+        .transactions-table th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
-        
-        .transactions-table td { 
-            padding: 15px; 
-            border-bottom: 1px solid #e9ecef; 
+
+        .transactions-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
         }
-        
-        .transactions-table tr:hover { 
-            background-color: #f8f9fa; 
+
+        .transactions-table tr:hover {
+            background-color: #f8f9fa;
         }
-        
+
         .transaction-id {
             font-family: monospace;
             font-size: 13px;
             color: #6c757d;
         }
-        
+
         .transaction-email {
             color: #007bff;
         }
-        
+
         .amount {
             font-weight: 600;
             color: #141414;
         }
-        
+
         .currency {
             font-size: 12px;
             color: #6c757d;
             margin-left: 3px;
         }
-        
-        .plan, .status { 
-            padding: 5px 10px; 
-            border-radius: 20px; 
-            font-size: 12px; 
-            font-weight: 600; 
+
+        .plan,
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
             display: inline-block;
         }
-        
-        .plan-premium { 
-            background-color: #e6f4ea; 
-            color: #137333; 
+
+        .plan-premium {
+            background-color: #e6f4ea;
+            color: #137333;
         }
-        
-        .plan-standard { 
-            background-color: #e8f0fe; 
-            color: #1a73e8; 
+
+        .plan-standard {
+            background-color: #e8f0fe;
+            color: #1a73e8;
         }
-        
-        .plan-basic { 
-            background-color: #fef7e0; 
-            color: #b06000; 
+
+        .plan-basic {
+            background-color: #fef7e0;
+            color: #b06000;
         }
-        
-        .status-active { 
-            background-color: #e6f4ea; 
-            color: #137333; 
+
+        .status-active {
+            background-color: #e6f4ea;
+            color: #137333;
         }
-        
-        .status-pending { 
-            background-color: #fef7e0; 
-            color: #b06000; 
+
+        .status-pending {
+            background-color: #fef7e0;
+            color: #b06000;
         }
-        
-        .status-canceled { 
-            background-color: #fce8e6; 
-            color: #c5221f; 
+
+        .status-canceled {
+            background-color: #fce8e6;
+            color: #c5221f;
         }
-        
-        .status-failed { 
-            background-color: #f5f5f5; 
-            color: #6c757d; 
+
+        .status-failed {
+            background-color: #f5f5f5;
+            color: #6c757d;
         }
-        
-        .action-cell { 
-            display: flex; 
-            gap: 10px; 
+
+        .action-cell {
+            display: flex;
+            gap: 10px;
         }
-        
-        .action-btn { 
-            padding: 5px 10px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            background: transparent; 
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: transparent;
         }
-        
-        .view-btn { 
-            color: #1a73e8; 
+
+        .view-btn {
+            color: #1a73e8;
         }
-        
-        .refund-btn { 
-            color: #e50914; 
+
+        .refund-btn {
+            color: #e50914;
         }
-        
-        .pagination { 
-            display: flex; 
-            justify-content: center; 
-            padding: 20px; 
-            gap: 10px; 
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            gap: 10px;
         }
-        
-        .pagination-btn { 
-            padding: 8px 15px; 
-            border: 1px solid #ddd; 
-            background: white; 
-            border-radius: 4px; 
-            cursor: pointer; 
+
+        .pagination-btn {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
         }
-        
-        .pagination-btn.active { 
-            background-color: #e50914; 
-            color: white; 
-            border-color: #e50914; 
+
+        .pagination-btn.active {
+            background-color: #e50914;
+            color: white;
+            border-color: #e50914;
         }
-        
+
         .loading {
             text-align: center;
             padding: 50px 20px;
         }
-        
+
         .loading-spinner {
             font-size: 40px;
             color: #e50914;
             margin-bottom: 15px;
         }
-        
+
         .loading-text {
             font-size: 18px;
             color: #aaa;
         }
-        
+
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-container {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 550px;
+            padding: 25px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .popup-overlay.active .popup-container {
+            transform: translateY(0);
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.3s;
+        }
+
+        .popup-close:hover {
+            color: #e50914;
+        }
+
+        .popup-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #141414;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        .popup-details {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 12px 15px;
+        }
+
+        .popup-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .popup-value {
+            color: #141414;
+            word-break: break-all;
+        }
+
+        .popup-actions {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .popup-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .popup-btn-close {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .popup-btn-close:hover {
+            background-color: #5a6268;
+        }
+
+        .popup-btn-primary {
+            background-color: #e50914;
+            color: white;
+        }
+
+        .popup-btn-primary:hover {
+            background-color: #c40811;
+        }
+
         @media (max-width: 1024px) {
             .filters-bar {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
             }
-            
+
             .filter-group {
                 width: 100%;
                 justify-content: space-between;
             }
         }
-        
+
         @media (max-width: 768px) {
             .stats-cards {
                 grid-template-columns: 1fr;
             }
-            
+
             .filter-group {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
             }
-            
+
             .transactions-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
             }
-            
+
             .transactions-actions {
                 width: 100%;
                 justify-content: space-between;
@@ -407,234 +619,250 @@
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <aside class="sidebar">
-        <div class="logo">
-            <i class="fab fa-netflix fa-2x"></i>
-            <span>Admin Dashboard</span>
-        </div>
-        <nav class="nav-links">
-            <a href="admin home.html" class="nav-link"><i class="fas fa-home"></i> Overview</a>
-            <a href="admin Subscribers.html" class="nav-link"><i class="fas fa-users"></i> Subscribers</a>
-            <a href="#" class="nav-link active"><i class="fas fa-credit-card"></i> Payments</a>
-            <a href="#" class="nav-link"><i class="fas fa-chart-line"></i> Analytics</a>
-            <a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
-        </nav>
-    </aside>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fab fa-netflix fa-2x"></i>
+                <span>Admin Dashboard</span>
+            </div>
+            <nav class="nav-links">
+                <a href="/templates/admin home.html" class="nav-link"><i class="fas fa-home"></i> Overview</a>
+                <a href="/templates/admin Subscribers.html" class="nav-link"><i class="fas fa-users"></i>
+                    Subscribers</a>
+                <a href="/templates/admin payment.html" class="nav-link active"><i class="fas fa-credit-card"></i>
+                    Payments</a>
+                <a href="#" class="nav-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
 
-    <main class="main-content">
-        <header class="top-header">
-            <div class="header-left">
-                <h1>Payment Transactions</h1>
-            </div>
-            <div class="header-right">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search transactions..." id="searchInput">
-                </div>
-                <div class="admin-profile">
-                    <img src="https://avatar.iran.liara.run/public/29" alt="Admin Avatar">
-                    <span>Admin User</span>
-                </div>
-            </div>
-        </header>
+            </nav>
+        </aside>
 
-        <div class="transactions-container">
-            <div class="transactions-header">
-                <h1>All Transactions</h1>
-                <div class="transactions-actions">
-                    <button class="btn btn-secondary" onclick="exportAsCsv()">
-                        <i class="fas fa-file-csv"></i> Export CSV
-                    </button>
-                    <button class="btn btn-primary" onclick="refreshData()">
-                        <i class="fas fa-sync-alt"></i> Refresh
-                    </button>
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <h1>Payment Transactions</h1>
                 </div>
-            </div>
-            
-            <div class="stats-cards">
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Total Revenue</div>
-                        <div class="stat-card-icon icon-revenue">
-                            <i class="fas fa-dollar-sign"></i>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search transactions..." id="searchInput">
+                    </div>
+                    <div class="admin-profile">
+                        <img src="https://avatar.iran.liara.run/public/29" alt="Admin Avatar">
+                        <span>Admin User</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="transactions-container">
+                <div class="transactions-header">
+                    <h1>All Transactions</h1>
+                    <div class="transactions-actions">
+                        <button class="btn btn-secondary" onclick="exportAsCsv()">
+                            <i class="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <button class="btn btn-primary" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Total Revenue</div>
+                            <div class="stat-card-icon icon-revenue">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="total-revenue">LKR 0.00</div>
+                        <div class="stat-card-change change-positive" id="revenue-change">
+                            <i class="fas fa-arrow-up"></i> 0% from last month
                         </div>
                     </div>
-                    <div class="stat-card-value" id="total-revenue">LKR 0.00</div>
-                    <div class="stat-card-change change-positive" id="revenue-change">
-                        <i class="fas fa-arrow-up"></i> 0% from last month
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Transactions</div>
-                        <div class="stat-card-icon icon-transactions">
-                            <i class="fas fa-receipt"></i>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Transactions</div>
+                            <div class="stat-card-icon icon-transactions">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="total-transactions">0</div>
+                        <div class="stat-card-change change-positive" id="transactions-change">
+                            <i class="fas fa-arrow-up"></i> 0% from last month
                         </div>
                     </div>
-                    <div class="stat-card-value" id="total-transactions">0</div>
-                    <div class="stat-card-change change-positive" id="transactions-change">
-                        <i class="fas fa-arrow-up"></i> 0% from last month
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Avg. Transaction</div>
-                        <div class="stat-card-icon icon-avg">
-                            <i class="fas fa-chart-line"></i>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Avg. Transaction</div>
+                            <div class="stat-card-icon icon-avg">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="avg-transaction">LKR 0.00</div>
+                        <div class="stat-card-change change-negative" id="avg-change">
+                            <i class="fas fa-arrow-down"></i> 0% from last month
                         </div>
                     </div>
-                    <div class="stat-card-value" id="avg-transaction">LKR 0.00</div>
-                    <div class="stat-card-change change-negative" id="avg-change">
-                        <i class="fas fa-arrow-down"></i> 0% from last month
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Pending</div>
-                        <div class="stat-card-icon icon-pending">
-                            <i class="fas fa-clock"></i>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Pending</div>
+                            <div class="stat-card-icon icon-pending">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="pending-transactions">0</div>
+                        <div class="stat-card-change change-positive" id="pending-change">
+                            <i class="fas fa-arrow-up"></i> 0% from last month
                         </div>
                     </div>
-                    <div class="stat-card-value" id="pending-transactions">0</div>
-                    <div class="stat-card-change change-positive" id="pending-change">
-                        <i class="fas fa-arrow-up"></i> 0% from last month
+                </div>
+
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <span class="filter-label">Status:</span>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="all">All Statuses</option>
+                            <option value="ACTIVE">Active</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="CANCELED">Canceled</option>
+                            <option value="FAILED">Failed</option>
+                        </select>
+
+                        <span class="filter-label">Plan:</span>
+                        <select class="filter-select" id="planFilter">
+                            <option value="all">All Plans</option>
+                            <option value="PREMIUM">Premium</option>
+                            <option value="STANDARD">Standard</option>
+                            <option value="BASIC">Basic</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">Date Range:</span>
+                        <div class="date-filter">
+                            <input type="date" class="date-input" id="startDate">
+                            <span>to</span>
+                            <input type="date" class="date-input" id="endDate">
+                        </div>
+
+                        <button class="btn btn-secondary" id="applyFilters">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
                     </div>
                 </div>
-            </div>
-            
-            <div class="filters-bar">
-                <div class="filter-group">
-                    <span class="filter-label">Status:</span>
-                    <select class="filter-select" id="statusFilter">
-                        <option value="all">All Statuses</option>
-                        <option value="ACTIVE">Active</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="CANCELED">Canceled</option>
-                        <option value="FAILED">Failed</option>
-                    </select>
-                    
-                    <span class="filter-label">Plan:</span>
-                    <select class="filter-select" id="planFilter">
-                        <option value="all">All Plans</option>
-                        <option value="PREMIUM">Premium</option>
-                        <option value="STANDARD">Standard</option>
-                        <option value="BASIC">Basic</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <span class="filter-label">Date Range:</span>
-                    <div class="date-filter">
-                        <input type="date" class="date-input" id="startDate">
-                        <span>to</span>
-                        <input type="date" class="date-input" id="endDate">
+
+                <div class="table-container-wrapper">
+                    <div class="transactions-table-container">
+                        <table class="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Order ID</th>
+                                    <th>Customer Email</th>
+                                    <th>Plan</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody">
+                                <tr>
+                                    <td colspan="7" class="loading">
+                                        <i class="fas fa-spinner fa-spin loading-spinner"></i>
+                                        <div class="loading-text">Loading transactions...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    
-                    <button class="btn btn-secondary" id="applyFilters">
-                        <i class="fas fa-filter"></i> Apply Filters
-                    </button>
                 </div>
-            </div>
 
-            <div class="table-container-wrapper">
-                <div class="transactions-table-container">
-                    <table class="transactions-table">
-                        <thead>
-                            <tr>
-                                <th>Transaction ID</th>
-                                <th>Order ID</th>
-                                <th>Customer Email</th>
-                                <th>Plan</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactionsTableBody">
-                            <tr>
-                                <td colspan="7" class="loading">
-                                    <i class="fas fa-spinner fa-spin loading-spinner"></i>
-                                    <div class="loading-text">Loading transactions...</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="popup-overlay" id="transactionPopup">
+                    <div class="popup-container">
+                        <button class="popup-close" onclick="closePopup()">&times;</button>
+                        <h2 class="popup-title">Transaction Details</h2>
+                        <div class="popup-details">
+                            <div class="popup-label">ID:</div>
+                            <div class="popup-value" id="popup-id"></div>
+
+                            <div class="popup-label">Order ID:</div>
+                            <div class="popup-value" id="popup-orderId"></div>
+
+                            <div class="popup-label">Plan:</div>
+                            <div class="popup-value" id="popup-plan"></div>
+
+                            <div class="popup-label">Amount:</div>
+                            <div class="popup-value" id="popup-amount"></div>
+
+                            <div class="popup-label">Status:</div>
+                            <div class="popup-value" id="popup-status"></div>
+
+                            <div class="popup-label">Customer:</div>
+                            <div class="popup-value" id="popup-customer"></div>
+                        </div>
+                        <div class="popup-actions">
+                            <button class="popup-btn popup-btn-close" onclick="closePopup()">Close</button>
+                            <button class="popup-btn popup-btn-primary" onclick="handleAction()">Refund</button>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="pagination" id="pagination"></div>
             </div>
+        </main>
+    </div>
 
-            <div class="pagination" id="pagination"></div>
-        </div>
-    </main>
-</div>
+    <script>
+        const API_URL = "http://localhost:8080/v1/api/payments/transactions";
 
-<script>
-    const API_URL = "http://localhost:8080/v1/api/payments/transactions";
-    let TOKEN = "";
-    
-    let currentPage = 0;
-    const pageSize = 10;
-    let totalPages = 1;
-    let allTransactions = [];
-    let filteredTransactions = [];
+        let currentPage = 0;
+        const pageSize = 10;
+        let totalPages = 1;
+        let allTransactions = [];
+        let filteredTransactions = [];
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get token from cookie
-        TOKEN = getCookie("token");
-        if (!TOKEN) {
-            window.location.href = "login.html";
-            return;
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
         }
-        
-        loadTransactions();
-        
-        // Set up event listeners
-        document.getElementById('searchInput').addEventListener('input', filterTransactions);
-        document.getElementById('applyFilters').addEventListener('click', filterTransactions);
-        document.getElementById('statusFilter').addEventListener('change', filterTransactions);
-        document.getElementById('planFilter').addEventListener('change', filterTransactions);
-    });
-    
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-    
-    async function loadTransactions(page = 0) {
-        try {
-            const response = await fetch(`${API_URL}?page=${page}&size=${pageSize}`, {
-                headers: { "Authorization": "Bearer " + TOKEN }
-            });
-            
-            if (response.status === 403 || response.status === 401) {
-                window.location.href = "login.html";
-                return;
-            }
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const result = await response.json();
-            
-            if (result.code === 200) {
-                allTransactions = result.data.content;
-                filteredTransactions = [...allTransactions];
-                
-                renderTable(allTransactions);
-                updateStats(allTransactions);
-                renderPagination(result.data.totalPages, page);
-            } else {
-                throw new Error(`API error: ${result.status}`);
-            }
-        } catch (error) {
-            console.error("Error loading transactions:", error);
-            document.getElementById('transactionsTableBody').innerHTML = `
+
+        async function loadTransactions(page = 0) {
+            const TOKEN = await getClerkToken();
+            try {
+                const response = await fetch(`${API_URL}?page=${page}&size=${pageSize}`, {
+                    headers: { "Authorization": "Bearer " + TOKEN }
+                });
+
+                if (response.status === 403 || response.status === 401) {
+                    window.location.href = "index.html";
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.code === 200) {
+                    allTransactions = result.data.content;
+                    filteredTransactions = [...allTransactions];
+
+                    renderTable(allTransactions);
+                    updateStats(allTransactions);
+                    renderPagination(result.data.totalPages, page);
+                } else {
+                    throw new Error(`API error: ${result.status}`);
+                }
+            } catch (error) {
+                console.error("Error loading transactions:", error);
+                document.getElementById('transactionsTableBody').innerHTML = `
                 <tr>
                     <td colspan="7" style="text-align: center; color: #e50914; padding: 30px;">
                         <i class="fas fa-exclamation-circle" style="font-size: 24px; margin-bottom: 10px;"></i>
@@ -642,14 +870,14 @@
                     </td>
                 </tr>
             `;
+            }
         }
-    }
-    
-    function renderTable(transactions) {
-        const tableBody = document.getElementById('transactionsTableBody');
-        
-        if (transactions.length === 0) {
-            tableBody.innerHTML = `
+
+        function renderTable(transactions) {
+            const tableBody = document.getElementById('transactionsTableBody');
+
+            if (transactions.length === 0) {
+                tableBody.innerHTML = `
                 <tr>
                     <td colspan="7" style="text-align: center; padding: 30px; color: #6c757d;">
                         <i class="fas fa-search" style="font-size: 24px; margin-bottom: 10px;"></i>
@@ -657,10 +885,10 @@
                     </td>
                 </tr>
             `;
-            return;
-        }
-        
-        tableBody.innerHTML = transactions.map(transaction => `
+                return;
+            }
+
+            tableBody.innerHTML = transactions.map(transaction => `
             <tr>
                 <td>
                     <div class="transaction-id">${transaction.id}</div>
@@ -680,156 +908,232 @@
                 </td>
             </tr>
         `).join('');
-        
-        // Add event listeners to action buttons
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                viewTransaction(this.dataset.id);
+
+            // Add event listeners to action buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    viewTransaction(this.dataset.id);
+                });
             });
-        });
-        
-        document.querySelectorAll('.refund-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                refundTransaction(this.dataset.id);
+
+            document.querySelectorAll('.refund-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    refundTransaction(this.dataset.id);
+                });
             });
-        });
-    }
-    
-    function updateStats(transactions) {
-        // Calculate total revenue
-        const totalRevenue = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
-        document.getElementById('total-revenue').textContent = `LKR ${totalRevenue.toFixed(2)}`;
-        
-        // Update transactions count
-        document.getElementById('total-transactions').textContent = transactions.length;
-        
-        // Calculate average transaction value
-        const avgTransaction = transactions.length > 0 ? totalRevenue / transactions.length : 0;
-        document.getElementById('avg-transaction').textContent = `LKR ${avgTransaction.toFixed(2)}`;
-        
-        // Count pending transactions
-        const pendingCount = transactions.filter(t => t.status === 'PENDING').length;
-        document.getElementById('pending-transactions').textContent = pendingCount;
-        
-        // For demo purposes, set some random changes
-        document.getElementById('revenue-change').innerHTML = `<i class="fas fa-arrow-up"></i> 12.5% from last month`;
-        document.getElementById('transactions-change').innerHTML = `<i class="fas fa-arrow-up"></i> 8.3% from last month`;
-        document.getElementById('avg-change').innerHTML = `<i class="fas fa-arrow-up"></i> 3.9% from last month`;
-        document.getElementById('pending-change').innerHTML = `<i class="fas fa-arrow-down"></i> 2.1% from last month`;
-    }
-    
-    function filterTransactions() {
-        const statusFilter = document.getElementById('statusFilter').value;
-        const planFilter = document.getElementById('planFilter').value;
-        const searchText = document.getElementById('searchInput').value.toLowerCase();
-        
-        filteredTransactions = allTransactions.filter(transaction => {
-            // Status filter
-            if (statusFilter !== 'all' && transaction.status !== statusFilter) {
-                return false;
-            }
-            
-            // Plan filter
-            if (planFilter !== 'all' && transaction.plan !== planFilter) {
-                return false;
-            }
-            
-            // Search text
-            if (searchText && 
-                !transaction.id.toLowerCase().includes(searchText) &&
-                !transaction.orderId.toLowerCase().includes(searchText) &&
-                !transaction.customerEmail.toLowerCase().includes(searchText)) {
-                return false;
-            }
-            
-            return true;
-        });
-        
-        renderTable(filteredTransactions);
-        updateStats(filteredTransactions);
-    }
-    
-    function renderPagination(totalPages, currentPage) {
-        const paginationContainer = document.getElementById('pagination');
-        
-        if (totalPages <= 1) {
-            paginationContainer.innerHTML = '';
-            return;
         }
-        
-        let paginationHTML = '';
-        
-        // Previous button
-        paginationHTML += `
+
+        function updateStats(transactions) {
+            // Calculate total revenue only for completed transactions
+            const totalRevenue = transactions.reduce((sum, transaction) => {
+                if (transaction.status === 'COMPLETED') {
+                    return sum + transaction.amount;
+                }
+                return sum;
+            }, 0);
+            document.getElementById('total-revenue').textContent = `LKR ${totalRevenue.toFixed(2)}`;
+
+            // Update transactions count
+            document.getElementById('total-transactions').textContent = transactions.length;
+
+            // Calculate average transaction value
+            const avgTransaction = transactions.length > 0 ? totalRevenue / transactions.length : 0;
+            document.getElementById('avg-transaction').textContent = `LKR ${avgTransaction.toFixed(2)}`;
+
+            // Count pending transactions
+            const pendingCount = transactions.filter(t => t.status === 'PENDING').length;
+            document.getElementById('pending-transactions').textContent = pendingCount;
+
+            // For demo purposes, set some random changes
+            document.getElementById('revenue-change').innerHTML = `<i class="fas fa-arrow-up"></i> 12.5% from last month`;
+            document.getElementById('transactions-change').innerHTML = `<i class="fas fa-arrow-up"></i> 8.3% from last month`;
+            document.getElementById('avg-change').innerHTML = `<i class="fas fa-arrow-up"></i> 3.9% from last month`;
+            document.getElementById('pending-change').innerHTML = `<i class="fas fa-arrow-down"></i> 2.1% from last month`;
+        }
+
+        function filterTransactions() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const planFilter = document.getElementById('planFilter').value;
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredTransactions = allTransactions.filter(transaction => {
+                // Status filter
+                if (statusFilter !== 'all' && transaction.status !== statusFilter) {
+                    return false;
+                }
+
+                // Plan filter
+                if (planFilter !== 'all' && transaction.plan !== planFilter) {
+                    return false;
+                }
+
+                // Search text
+                if (searchText &&
+                    !transaction.id.toLowerCase().includes(searchText) &&
+                    !transaction.orderId.toLowerCase().includes(searchText) &&
+                    !transaction.customerEmail.toLowerCase().includes(searchText)) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            renderTable(filteredTransactions);
+            updateStats(filteredTransactions);
+        }
+
+        function renderPagination(totalPages, currentPage) {
+            const paginationContainer = document.getElementById('pagination');
+
+            if (totalPages <= 1) {
+                paginationContainer.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+
+            // Previous button
+            paginationHTML += `
             <button class="pagination-btn" ${currentPage === 0 ? 'disabled' : ''} onclick="loadTransactions(${currentPage - 1})">
                 <i class="fas fa-chevron-left"></i>
             </button>
         `;
-        
-        // Page numbers
-        for (let i = 0; i < totalPages; i++) {
-            paginationHTML += `
+
+            // Page numbers
+            for (let i = 0; i < totalPages; i++) {
+                paginationHTML += `
                 <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="loadTransactions(${i})">
                     ${i + 1}
                 </button>
             `;
-        }
-        
-        // Next button
-        paginationHTML += `
+            }
+
+            // Next button
+            paginationHTML += `
             <button class="pagination-btn" ${currentPage === totalPages - 1 ? 'disabled' : ''} onclick="loadTransactions(${currentPage + 1})">
                 <i class="fas fa-chevron-right"></i>
             </button>
         `;
-        
-        paginationContainer.innerHTML = paginationHTML;
-    }
-    
-    function viewTransaction(transactionId) {
-        const transaction = allTransactions.find(t => t.id === transactionId);
-        if (transaction) {
-            alert(`Transaction Details:\n
-ID: ${transaction.id}
-Order ID: ${transaction.orderId}
-Plan: ${transaction.plan}
-Amount: ${transaction.amount} ${transaction.currency}
-Status: ${transaction.status}
-Customer: ${transaction.customerEmail}
-            `);
+
+            paginationContainer.innerHTML = paginationHTML;
         }
-    }
-    
-    function refundTransaction(transactionId) {
-        if (confirm('Are you sure you want to process a refund for this transaction?')) {
-            alert(`Refund processed for transaction: ${transactionId}\n(This is a demo action)`);
-            // In a real application, you would call your refund API here
+
+        //         function viewTransaction(transactionId) {
+        //             const transaction = allTransactions.find(t => t.id === transactionId);
+        //             if (transaction) {
+        //                 alert(`Transaction Details:\n
+        // ID: ${transaction.id}
+        // Order ID: ${transaction.orderId}
+        // Plan: ${transaction.plan}
+        // Amount: ${transaction.amount} ${transaction.currency}
+        // Status: ${transaction.status}
+        // Customer: ${transaction.customerEmail}
+        //             `);
+        //             }
+        //         }
+
+
+        function viewTransaction(transactionId) {
+            const transaction = allTransactions.find(t => t.id === transactionId);
+            if (transaction) {
+                // Populate the popup with transaction details
+                document.getElementById('popup-id').textContent = transaction.id;
+                document.getElementById('popup-orderId').textContent = transaction.orderId;
+                document.getElementById('popup-plan').textContent = transaction.plan;
+                document.getElementById('popup-amount').textContent = `${transaction.amount} ${transaction.currency}`;
+                document.getElementById('popup-status').textContent = transaction.status;
+                document.getElementById('popup-customer').textContent = transaction.customerEmail;
+
+                // Show the popup
+                document.getElementById('transactionPopup').classList.add('active');
+            }
         }
-    }
-    
-    function exportAsCsv() {
-        if (filteredTransactions.length === 0) {
-            alert('No transactions to export');
-            return;
+
+        function closePopup() {
+            document.getElementById('transactionPopup').classList.remove('active');
         }
-        
-        let csvContent = "data:text/csv;charset=utf-8,Transaction ID,Order ID,Customer Email,Plan,Amount,Currency,Status\n";
-        
-        filteredTransactions.forEach(transaction => {
-            csvContent += `${transaction.id},${transaction.orderId},${transaction.customerEmail},${transaction.plan},${transaction.amount},${transaction.currency},${transaction.status}\n`;
+
+        function handleAction() {
+            // Handle the primary action (e.g., refund)
+            alert('Refund action would be processed here');
+            // You would typically have your refund logic here
+        }
+
+        // Close popup when clicking outside the content
+        document.getElementById('transactionPopup').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closePopup();
+            }
         });
-        
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "transactions.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-    
-    function refreshData() {
-        loadTransactions(currentPage);
-    }
-</script>
+
+        // Close popup with Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closePopup();
+            }
+        });
+
+        function refundTransaction(transactionId) {
+            if (confirm('Are you sure you want to process a refund for this transaction?')) {
+                alert(`Refund processed for transaction: ${transactionId}\n(This is a demo action)`);
+                // In a real application, you would call your refund API here
+            }
+        }
+
+        function exportAsCsv() {
+            if (filteredTransactions.length === 0) {
+                alert('No transactions to export');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,Transaction ID,Order ID,Customer Email,Plan,Amount,Currency,Status\n";
+
+            filteredTransactions.forEach(transaction => {
+                csvContent += `${transaction.id},${transaction.orderId},${transaction.customerEmail},${transaction.plan},${transaction.amount},${transaction.currency},${transaction.status}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "transactions.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function refreshData() {
+            loadTransactions(currentPage);
+        }
+
+        function initClerk() {
+            if (!window.Clerk) {
+                console.error("Clerk script not loaded yet!");
+                return;
+            }
+            Clerk.load().then(() => {
+                const clerkUser = Clerk.user;
+                if (!clerkUser) {
+                    window.location.href = "login.html";
+                    return;
+                }
+                document.querySelector('.admin-profile img').src = clerkUser.imageUrl || 'https://avatar.iran.liara.run/public/29';
+                document.querySelector('.admin-profile span').textContent = clerkUser.fullName || 'Admin User';
+                loadTransactions();
+
+                // Set up event listeners
+                document.getElementById('searchInput').addEventListener('input', filterTransactions);
+                document.getElementById('applyFilters').addEventListener('click', filterTransactions);
+                document.getElementById('statusFilter').addEventListener('change', filterTransactions);
+                document.getElementById('planFilter').addEventListener('change', filterTransactions);
+            });
+        }
+    </script>
+    <script src="../static/js/util.js"></script>
+    <!-- Clerk Script -->
+    <script async crossorigin="anonymous"
+        data-clerk-publishable-key="pk_test_dG9wLWdhbm5ldC05Mi5jbGVyay5hY2NvdW50cy5kZXYk"
+        src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" onload="initClerk()">
+        </script>
 </body>
+
 </html>

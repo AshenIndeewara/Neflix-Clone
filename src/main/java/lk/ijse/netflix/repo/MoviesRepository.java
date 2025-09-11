@@ -19,5 +19,8 @@ public interface MoviesRepository extends JpaRepository<Movie, Integer> {
     @Query("UPDATE Movie m SET m.views = :views WHERE m.id = :id")
     int updateMovieViewsById(@Param("id") String id, @Param("views") Long views);
 
-
+    //count all views
+    @Query("SELECT SUM(m.views) FROM Movie m")
+    Long countAllViews();
+    List<Movie> findTop10ByOrderByViewsDesc();
 }

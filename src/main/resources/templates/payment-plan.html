@@ -272,20 +272,28 @@
   <script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
 
   <script>
-    document.addEventListener("DOMContentLoaded", checkToken());
-    function checkToken() {
-      const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('token='));
-      const token = tokenCookie ? tokenCookie.split('=')[1] : undefined;
-
-      console.log("Token:", token);
-
-      if (!token) {
-        window.location.href = "login.html";
+    async function getClerkToken() {
+      if (!window.Clerk) {
+        console.error("Clerk not loaded!");
+        return null;
       }
+      
+      await window.Clerk.load();
+      const session = window.Clerk.session;
+      
+      if (!session) {
+        window.location.href = "login.html";
+        return null;
+      }
+      
+      // Get token with custom template that includes role
+      return await session.getToken({ 
+        template: "Custom_Claims" // This matches the template name you created in Clerk Dashboard
+      });
     }
     async function makePayment(plan, amount) {
         try {
-            const token =  document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1]
+            const token = await getClerkToken();
             console.log("Token:", token);
             const response = await fetch('http://localhost:8080/v1/api/payments', {
                 method: 'POST',
@@ -347,7 +355,22 @@
             alert("Payment failed! Check console for details.");
         }
     }
+      // Initialize Clerk and load movies
+  function initClerk() {
+    if (!window.Clerk) {
+      console.error("Clerk script not loaded yet!");
+      return;
+    }
+    Clerk.load();
+  }
   </script>
+<!-- Clerk Script -->
+<script async
+        crossorigin="anonymous"
+        data-clerk-publishable-key="pk_test_dG9wLWdhbm5ldC05Mi5jbGVyay5hY2NvdW50cy5kZXYk"
+        src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+        onload="initClerk()">
+</script>
 
 </body>
 </html>

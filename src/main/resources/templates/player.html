@@ -373,7 +373,7 @@
     // Fetch movie details from API
     async function getMovieDetails(id) {
         try {
-            const token = getCookie('token');
+            const token = await getClerkToken();
             const response = await fetch(`http://localhost:8080/v1/movies/${id}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -426,8 +426,22 @@
     }
 
     // Start the player when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initPlayer);
+    //document.addEventListener('DOMContentLoaded', initPlayer);
+    function initClerk() {
+        if (!window.Clerk) {
+            console.error("Clerk script not loaded yet!");
+            return;
+        }
+        Clerk.load().then(initPlayer);
+    }
 </script>
-
+<script src="../static/js/util.js"></script>
+<!-- Clerk Script -->
+<script async
+        crossorigin="anonymous"
+        data-clerk-publishable-key="pk_test_dG9wLWdhbm5ldC05Mi5jbGVyay5hY2NvdW50cy5kZXYk"
+        src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+        onload="initClerk()">
+</script>
 </body>
 </html>

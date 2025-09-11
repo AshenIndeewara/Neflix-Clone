@@ -76,4 +76,15 @@ public class MovieService {
         movieRepository.delete(existingMovie);
         return "Movie deleted successfully";
     }
+
+    //Total views across all movies
+    public Long getTotalViews() {
+        return movieRepository.countAllViews();
+    }
+
+    //Top 10 most viewed movies
+    public List<Movie> getMostViewedMovies() {
+        return movieRepository.findTop10ByOrderByViewsDesc();
+    }
+
 }

@@ -18,18 +18,25 @@ public class Movie {
     private String id;
     private String title;
     private String year;
+
     @ElementCollection
-    @CollectionTable(name = "movie_genres", joinColumns = @JoinColumn(name = "movie_id"))
+    @CollectionTable(
+            name = "movie_genres",
+            joinColumns = @JoinColumn(name = "movie_id")
+    )
     @Column(name = "genre")
     private List<String> genres;
+
     @Lob
     @Column(columnDefinition = "TEXT")
     private String description;
     private String imageUrl;
+
     @Lob
     @Column(columnDefinition = "TEXT")
     private String videoUrl;
     private String subtitleUrl;
+
     @Builder.Default
     private Long views = 0L;
 }

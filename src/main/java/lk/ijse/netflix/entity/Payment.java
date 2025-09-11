@@ -19,11 +19,7 @@ public class Payment {
     private double amount;
     private String currency;
     private String status;   // PENDING, SUCCESS, FAILED
+    private String userID;
     private String customerEmail;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @ToString.Exclude
-    @JsonBackReference
-    private User user;
+    private String date;
 }

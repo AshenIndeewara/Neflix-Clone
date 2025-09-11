@@ -4,6 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lk.ijse.netflix.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +14,28 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
+        String path = request.getRequestURI();
+        System.out.println("Access denied to path: " + path);
+
+        ApiResponse response;
+        HttpStatus status;
+
+        if (path.contains("/admin")) {
+            response = new ApiResponse(403, "Forbidden", "You do not have permission to access admin resources.");
+            status = HttpStatus.FORBIDDEN;
+        } else if (path.contains("movies")) {
+            response = new ApiResponse(401, "Unauthorized", "You need to login to access this resource.");
+            status = HttpStatus.PAYMENT_REQUIRED;
+        } else {
+            response = new ApiResponse(403, "Forbidden", "You do not have permission to access this resource.");
+            status = HttpStatus.FORBIDDEN;
+        }
+
+        return ResponseEntity.status(status).body(response);
+    }
+
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiResponse handleUsernameNotFoundException
@@ -37,17 +60,6 @@ public class GlobalExceptionHandler {
         return new ApiResponse(401,
                 "Unauthorized",
                 "Expired JWT Token");
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ApiResponse handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
-        String path = request.getRequestURI();
-        if (path.startsWith("/add")) {
-            return new ApiResponse(403, "Forbidden", "Not Admin");
-        } else {
-            return new ApiResponse(402, "Payment Required", "Upgrade to a paid plan to access this feature");
-        }
     }
 
     @ExceptionHandler(RuntimeException.class)
