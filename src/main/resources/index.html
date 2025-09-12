@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix Clone</title>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    /* --- Clean CSS from previous step --- */
+    :root {
+      --netflix-red: #e50914;
+      --netflix-black: #141414;
+      --netflix-dark: #181818;
+      --netflix-gray: #b3b3b3;
+    }
+
+    body {
+      background-color: var(--netflix-black);
+      color: white;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .navbar {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 10%, transparent);
+      padding: 20px 40px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      transition: background-color 0.3s;
+    }
+
+    .navbar.scrolled {
+      background-color: var(--netflix-black);
+    }
+
+    .navbar-brand {
+      color: var(--netflix-red) !important;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-right: 30px;
+    }
+
+    .nav-link {
+      color: #fff !important;
+      margin-right: 15px;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+
+    .nav-link:hover {
+      color: var(--netflix-gray) !important;
+    }
+
+    .dropdown-menu {
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #333;
+    }
+
+    .dropdown-item {
+      color: #fff;
+      font-size: 13px;
+      padding: 8px 16px;
+    }
+
+    .dropdown-item:hover {
+      background: #333;
+      color: #fff;
+    }
+
+    .profile-pic {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      position: relative;
+      height: 80vh;
+      min-height: 500px;
+      color: white;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .hero-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, var(--netflix-black) 0%, transparent 50%), linear-gradient(to right, var(--netflix-black) 10%, transparent 70%);
+      z-index: 1;
+    }
+
+    .hero-backdrop-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.6;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 100px 40px 40px;
+      max-width: 600px;
+      margin-top: 100px;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .hero-description {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+      color: #ddd;
+      line-height: 1.4;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-play,
+    .btn-info {
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-weight: bold;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-play {
+      background: white;
+      color: black;
+    }
+
+    .btn-play:hover {
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    .btn-info {
+      background: rgba(109, 109, 110, 0.7);
+      color: white;
+    }
+
+    .btn-info:hover {
+      background: rgba(109, 109, 110, 0.5);
+    }
+
+    /* Content Rows */
+    .content-section {
+      padding: 0 40px;
+      margin-bottom: 40px;
+    }
+
+    .row-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      padding-left: 5px;
+    }
+
+    .row-container {
+      position: relative;
+    }
+
+    .content-row {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 60px 0;
+      gap: 8px;
+      scrollbar-width: none;
+    }
+
+    .content-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .row-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: white;
+      font-size: 24px;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 0.3s;
+      cursor: pointer;
+    }
+
+    .row-container:hover .row-nav {
+      opacity: 1;
+    }
+
+    .row-nav-left {
+      left: 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .row-nav-right {
+      right: 0;
+      border-radius: 4px 0 0 4px;
+    }
+
+    /* Movie Cards */
+    .movie-card {
+      flex: 0 0 auto;
+      width: 180px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .movie-poster {
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+      border-radius: 4px;
+      transition: transform 0.3s ease;
+    }
+
+    .movie-card:hover {
+      transform: scale(1.2);
+      z-index: 10;
+    }
+
+    .movie-card:hover .movie-poster {
+      transform: scale(1.1);
+    }
+
+    /* Popup */
+    .movie-popup {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 350px;
+      background-color: var(--netflix-dark);
+      color: white;
+      border-radius: 8px;
+      padding: 15px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 20;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+    }
+
+    .movie-card:hover .movie-popup {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(-10px);
+    }
+
+    .movie-popup-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .movie-popup-meta {
+      font-size: 13px;
+      color: var(--netflix-gray);
+      margin-bottom: 10px;
+    }
+
+    .movie-popup-description {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 40px;
+      color: var(--netflix-gray);
+      margin-top: 60px;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .social-icons a {
+      color: var(--netflix-gray);
+      font-size: 1.5rem;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .footer-link {
+      color: var(--netflix-gray);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .footer-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer-copyright {
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width:992px) {
+      .navbar {
+        padding: 15px 20px;
+      }
+
+      .hero-content {
+        padding: 80px 20px 30px;
+        max-width: 100%;
+      }
+
+      .hero-title {
+        font-size: 2.2rem;
+      }
+
+      .content-section {
+        padding: 0 20px;
+      }
+
+      .movie-card {
+        width: 180px;
+      }
+
+      .footer-links {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width:768px) {
+      .hero-section {
+        height: 60vh;
+      }
+
+      .hero-title {
+        font-size: 1.8rem;
+      }
+
+      .hero-description {
+        font-size: 1rem;
+      }
+
+      .movie-card {
+        width: 150px;
+      }
+
+      .footer-links {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width:576px) {
+      .navbar-brand {
+        font-size: 1.8rem;
+      }
+
+      .hero-section {
+        height: 50vh;
+      }
+
+      .hero-content {
+        margin-top: 60px;
+      }
+
+      .hero-title {
+        font-size: 1.5rem;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .btn-play,
+      .btn-info {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .movie-card {
+        width: 120px;
+      }
+
+      .footer-links {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar d-flex justify-content-between align-items-center">
+    <a class="navbar-brand" href="#">NETFLIX</a>
+    <ul class="navbar-nav d-flex flex-row">
+      <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">TV Shows</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Movies</a></li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Profile</a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">Account</a></li>
+          <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <img class="hero-backdrop-img" src="https://via.placeholder.com/1280x720" alt="Hero Image">
+    <div class="hero-backdrop"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">Featured Movie</h1>
+      <p class="hero-description">This is a brief description of the featured movie. It's exciting and engaging.</p>
+      <div class="hero-buttons">
+        <button class="btn-play"><i class="bi bi-play-fill"></i> Play</button>
+        <button class="btn-info"><i class="bi bi-info-circle"></i> More Info</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <h2 class="row-title">Trending Now</h2>
+    <div class="row-container">
+      <button class="row-nav row-nav-left" onclick="scrollRow('trending', -300)">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <div class="content-row" id="trending-row"></div>
+      <button class="row-nav row-nav-right" onclick="scrollRow('trending', 300)">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <h2 class="row-title">Popular on Netflix</h2>
+    <div class="row-container">
+      <button class="row-nav row-nav-left" onclick="scrollRow('popular', -300)">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <div class="content-row" id="popular-row"></div>
+      <button class="row-nav row-nav-right" onclick="scrollRow('popular', 300)">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <h2 class="row-title">Action Movies</h2>
+    <div class="row-container">
+      <button class="row-nav row-nav-left" onclick="scrollRow('action', -300)">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <div class="content-row" id="action-row"></div>
+      <button class="row-nav row-nav-right" onclick="scrollRow('action', 300)">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="social-icons">
+      <a href="#"><i class="bi bi-facebook"></i></a>
+      <a href="#"><i class="bi bi-twitter"></i></a>
+      <a href="#"><i class="bi bi-instagram"></i></a>
+    </div>
+    <div class="footer-links">
+      <a href="#" class="footer-link">FAQ</a>
+      <a href="#" class="footer-link">Help Center</a>
+      <a href="#" class="footer-link">Terms of Use</a>
+      <a href="#" class="footer-link">Privacy</a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2025 Netflix Clone. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Scroll content rows horizontally
+    function scrollRow(rowId, amount) {
+      const row = document.getElementById(`${rowId}-row`);
+      if (row) row.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    // Create a movie card with hover popup
+    function createMovieCard(movie) {
+      const card = document.createElement("div");
+      card.className = "movie-card";
+
+      const img = document.createElement("img");
+      img.src = movie.imageUrl || "https://via.placeholder.com/300x450";
+      img.className = "movie-poster";
+      img.alt = movie.title;
+
+      img.addEventListener("click", () => {
+        window.location.href = `player.html?id=${movie.id}`;
+      });
+
+      const popup = document.createElement("div");
+      popup.className = "movie-popup";
+      popup.innerHTML = `
+      <div class="movie-popup-title">${movie.title}</div>
+      <div class="movie-popup-meta">${movie.year} | ${movie.genres.join(', ')}</div>
+      <div class="movie-popup-description">${movie.description}</div>
+    `;
+      card.appendChild(img);
+      card.appendChild(popup);
+
+      return card;
+    }
+
+    // Get Clerk JWT token
+    async function getClerkToken() {
+      if (!window.Clerk) {
+        console.error("Clerk not loaded!");
+        return null;
+      }
+
+      await window.Clerk.load();
+      const session = window.Clerk.session;
+
+      if (!session) {
+        window.location.href = "login.html";
+        return null;
+      }
+      if (window.Clerk.user.publicMetadata.role === 'ADMIN') {
+        window.location.href = "admin home.html";
+      }
+      // Get token with custom template that includes role
+      return await session.getToken({
+        template: "Custom_Claims" // This matches the template name you created in Clerk Dashboard
+      });
+    }
+    // Load movies
+    async function loadMovies() {
+      try {
+        const token = await getClerkToken();
+        if (!token) return;
+
+        const page = 0;
+        const size = 20;
+
+        const response = await fetch(`https://netflix-ldox1.sevalla.app/v1/movies/all?page=${page}&size=${size}`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (response.status === 403) {
+          window.location.href = "login.html";
+          return;
+        } else if (response.status === 402) {
+          window.location.href = "payment-plan.html";
+          return;
+        }
+
+        const data = await response.json();
+
+
+        const movies = data.data.content || [];
+        const trendingRow = document.getElementById("trending-row");
+        const popularRow = document.getElementById("popular-row");
+        const actionRow = document.getElementById("action-row");
+        const heroSection = document.querySelector(".hero-section");
+
+        if (!trendingRow || !popularRow || !actionRow || !heroSection) return;
+
+        trendingRow.innerHTML = "";
+        popularRow.innerHTML = "";
+        actionRow.innerHTML = "";
+
+        const randomIndex = Math.floor(Math.random() * movies.length);
+        heroSection.innerHTML = `
+        <img class="hero-backdrop-img" src="${movies[randomIndex]?.imageUrl || 'https://via.placeholder.com/1280x720'}" alt="Hero Image">
+        <div class="hero-backdrop"></div>
+        <div class="hero-content">
+          <h1 class="hero-title">${movies[randomIndex]?.title || 'Featured Movie'}</h1>
+          <p class="hero-description">${movies[randomIndex]?.description || 'Description not available.'}</p>
+          <div class="hero-buttons">
+            <button class="btn-play" onclick="window.location.href='player.html?id=${movies[randomIndex]?.id}'"><i class="bi bi-play-fill"></i> Play</button>
+            <button class="btn-info" onclick="alert('More info coming soon!')"><i class="bi bi-info-circle"></i> More Info</button>
+          </div>
+        </div>
+      `;
+
+        movies.forEach(movie => {
+          trendingRow.appendChild(createMovieCard(movie));
+          if (movie.genres && movie.genres.includes("Action")) {
+            actionRow.appendChild(createMovieCard(movie));
+          }
+        });
+
+        [...movies]
+          .sort((a, b) => b.views - a.views)
+          .slice(0, 10)
+          .forEach(movie => popularRow.appendChild(createMovieCard(movie)));
+
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      navbar?.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Logout function
+    async function logout() {
+      await window.Clerk.load();
+      await window.Clerk.signOut();
+      localStorage.clear();
+      document.cookie.split(";").forEach(function (c) {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      window.location.href = "login.html";
+    }
+
+    // Initialize Clerk and load movies
+    function initClerk() {
+      if (!window.Clerk) {
+        console.error("Clerk script not loaded yet!");
+        return;
+      }
+      Clerk.load().then(loadMovies);
+    }
+  </script>
+
+  <!-- Clerk Script -->
+  <script async crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_dG9wLWdhbm5ldC05Mi5jbGVyay5hY2NvdW50cy5kZXYk"
+    src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" onload="initClerk()">
+    </script>
+
+</body>
+
+</html>
