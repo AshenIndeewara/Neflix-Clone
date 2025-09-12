@@ -7,13 +7,13 @@ function handleLogin(event) {
     const password = document.getElementById('password').value;
 
     const data = {
-        "email" : email,
-        "password" : password
+        "email": email,
+        "password": password
     }
 
     console.log(data)
 
-    fetch('http://localhost:8080/v1/auth/login', {
+    fetch('https://netflix-ldox1.sevalla.app/v1/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -23,16 +23,16 @@ function handleLogin(event) {
         .then(response => response.json())
         .then(data => {
             console.log('POST response:', data);
-            if (data.code===200){
+            if (data.code === 200) {
                 notyf.success({
                     message: 'Login successfully',
                     duration: 9000
                 })
                 // Set a cookie
-                document.cookie = "token="+ data.data.accessToken +"; expires=Fri, 31 Dec 2025 23:59:59 GMT; path=/";
+                document.cookie = "token=" + data.data.accessToken + "; expires=Fri, 31 Dec 2025 23:59:59 GMT; path=/";
                 window.location.href = "home.html";
             }
-            else{
+            else {
                 notyf.error({
                     message: data.data,
                     duration: 9000
@@ -50,7 +50,7 @@ function handleCreateAccount(event) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const password1 = document.getElementById('password1').value;
-    if (password1!==password){
+    if (password1 !== password) {
 
         notyf.error({
             message: 'Password are not same',
@@ -61,13 +61,13 @@ function handleCreateAccount(event) {
 
     const data = {
         "fullName": fullName,
-        "email" : email,
-        "password" : password
+        "email": email,
+        "password": password
     }
 
     console.log(data)
 
-    fetch('http://localhost:8080/v1/auth/register', {
+    fetch('https://netflix-ldox1.sevalla.app/v1/auth/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -77,14 +77,14 @@ function handleCreateAccount(event) {
         .then(response => response.json())
         .then(data => {
             console.log('POST response:', data);
-            if (data.code===200){
+            if (data.code === 200) {
                 notyf.success({
                     message: 'Register successfully',
                     duration: 9000
                 })
                 window.location.href = "login.html";
             }
-            else{
+            else {
                 notyf.error({
                     message: data.data,
                     duration: 9000

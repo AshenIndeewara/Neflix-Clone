@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/v1/movies";
+const API_URL = "https://netflix-ldox1.sevalla.app/v1/movies";
 const TMDB_KEY = "8eaf4b353f53d2952b8fb3f8bedbbddd";
 const SUBTITLEAPI = "https://managapi-eak67.kinsta.app/download_subtitles?name="
 
@@ -82,32 +82,32 @@ function openAddModal() {
 
 async function deleteMovie(id) {
     if (!confirm("Are you sure you want to delete this movie?")) return;
-    
+
     const TOKEN = await getClerkToken();
     fetch(`${API_URL}/delete/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${TOKEN}` }
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.code === 200) {
-            notyf.success({
-                message: 'Movie deleted successfully',
-                duration: 9000
-            });
-            modal.style.display = "none";
-            loadMovies(currentPage);
-        }
-        else {
-            notyf.error({
-                message: data.data,
-                duration: 9000
-            });
-        }
-    })
-    .catch(err => {
-        console.error("Error deleting movie:", err);
-    });
+        .then(res => res.json())
+        .then(data => {
+            if (data.code === 200) {
+                notyf.success({
+                    message: 'Movie deleted successfully',
+                    duration: 9000
+                });
+                modal.style.display = "none";
+                loadMovies(currentPage);
+            }
+            else {
+                notyf.error({
+                    message: data.data,
+                    duration: 9000
+                });
+            }
+        })
+        .catch(err => {
+            console.error("Error deleting movie:", err);
+        });
 }
 
 function openEditModal(movie) {
@@ -163,7 +163,7 @@ async function selectTMDBMovie(movieId) {
     const movie = await res.json();
 
     document.getElementById("title").value = movie.title || "";
-    document.getElementById("year").value = movie.release_date ? movie.release_date.substring(0,4) : "";
+    document.getElementById("year").value = movie.release_date ? movie.release_date.substring(0, 4) : "";
     document.getElementById("description").value = movie.overview || "";
     document.getElementById("imageUrl").value = movie.poster_path ? `https://image.tmdb.org/t/p/original${movie.poster_path}` : "";
     document.getElementById("genres").value = movie.genres.map(g => g.name).join(", ");
@@ -190,7 +190,7 @@ async function searchTMDB(query) {
     data.results.slice(0, 10).forEach(movie => {
         const div = document.createElement("div");
         //const genres = movie.genre_ids.map(id => genreMap[id]).filter(Boolean).join(", ");
-        div.textContent = `${movie.title} (${movie.release_date ? movie.release_date.substring(0,4) : "N/A"})`;
+        div.textContent = `${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : "N/A"})`;
         div.addEventListener("click", () => selectTMDBMovie(movie.id));
         tmdbResults.appendChild(div);
     });
@@ -198,7 +198,7 @@ async function searchTMDB(query) {
 }
 
 // ================== Save Movie ==================
-form.addEventListener("submit", async function(e) {
+form.addEventListener("submit", async function (e) {
     e.preventDefault();
     const formData = new FormData(this);
     const movie = Object.fromEntries(formData.entries());
@@ -211,9 +211,9 @@ form.addEventListener("submit", async function(e) {
         url = `${API_URL}/update/${movie.id}`;
         method = "PUT";
     } else {
-        url = API_URL+"/add";
+        url = API_URL + "/add";
     }
-    
+
     const TOKEN = await getClerkToken();
     const response = await fetch(url, {
         method,
@@ -227,18 +227,18 @@ form.addEventListener("submit", async function(e) {
     console.log('Response:', data);
     if (response.ok) {
         // alert(movie.id ? "Movie updated!" : "Movie added!");
-        if (data.code===200){
-                notyf.success({
-                    message: 'Login successfully',
-                    duration: 9000
-                })
-            }
-            else{
-                notyf.error({
-                    message: data.data,
-                    duration: 9000
-                })
-            }
+        if (data.code === 200) {
+            notyf.success({
+                message: 'Login successfully',
+                duration: 9000
+            })
+        }
+        else {
+            notyf.error({
+                message: data.data,
+                duration: 9000
+            })
+        }
         modal.style.display = "none";
         this.reset();
         loadMovies(currentPage);
@@ -249,13 +249,13 @@ form.addEventListener("submit", async function(e) {
 
 // Initialize Clerk and load movies
 function initClerk() {
-if (!window.Clerk) {
-    console.error("Clerk script not loaded yet!");
-    return;
-}
-//Clerk.load().then(loadMovies);
-Clerk.load().then(() => {
-    getUserImage().then(setAdminAvatar);
-    loadGenres().then(() => loadMovies());
-});
+    if (!window.Clerk) {
+        console.error("Clerk script not loaded yet!");
+        return;
+    }
+    //Clerk.load().then(loadMovies);
+    Clerk.load().then(() => {
+        getUserImage().then(setAdminAvatar);
+        loadGenres().then(() => loadMovies());
+    });
 }

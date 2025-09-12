@@ -10,7 +10,7 @@ async function loadMovies() {
         const page = getPageFromUrl() - 1; // backend pages are zero-indexed
         const size = 10;
 
-        const response = await fetch(`http://localhost:8080/v1/movies/all?page=${page}&size=${size}`, {
+        const response = await fetch(`https://netflix-ldox1.sevalla.app/v1/movies/all?page=${page}&size=${size}`, {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
