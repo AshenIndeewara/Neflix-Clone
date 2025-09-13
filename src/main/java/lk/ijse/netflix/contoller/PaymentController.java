@@ -5,18 +5,15 @@ import lk.ijse.netflix.dto.PaymentRequest;
 import lk.ijse.netflix.dto.PaymentResponse;
 import lk.ijse.netflix.dto.UserData;
 import lk.ijse.netflix.entity.Payment;
-import lk.ijse.netflix.entity.Role;
 import lk.ijse.netflix.repo.PaymentRepository;
 import lk.ijse.netflix.service.PayHereService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.Date;
 
 @RestController

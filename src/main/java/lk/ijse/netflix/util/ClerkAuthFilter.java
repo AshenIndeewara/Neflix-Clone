@@ -53,16 +53,9 @@ public class ClerkAuthFilter extends OncePerRequestFilter {
 
             Claims body = claims.getBody();
 
-//            System.out.println("JWT Claims:");
-//            for (String key : body.keySet()) {
-//                System.out.println(key + " : " + body.get(key));
-//            }
-
             String userId = body.getSubject();
-            //System.out.println("User ID from token: " + userId);
 
             String email = body.get("email", String.class);
-            //System.out.println("Email from token: " + email);
 
             String role = body.get("role", String.class);
             System.out.println("Role from token: " + role);
