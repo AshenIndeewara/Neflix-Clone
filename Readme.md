@@ -34,10 +34,10 @@ A **Netflix-like movie streaming platform** with secure authentication, subscrip
 
 ## 📸 Screenshots
 
-![Home](screenshots/Screenshot-2025-09-21-175715.png)  
-![Player](screenshots/Screenshot-2025-09-21-175738.png)  
-![Admin Home](screenshots/Screenshot-2025-09-21-175814.png)  
-![Admin Add Movie](screenshots/Screenshot-2025-09-21-175833.png)  
+![Home](https://raw.githubusercontent.com/AshenIndeewara/Neflix-Clone/refs/heads/master/screenshots/Screenshot%202025-09-21%20175715.png)  
+![Player](https://raw.githubusercontent.com/AshenIndeewara/Neflix-Clone/refs/heads/master/screenshots/Screenshot%202025-09-21%20175738.png)
+![Admin Home](https://raw.githubusercontent.com/AshenIndeewara/Neflix-Clone/refs/heads/master/screenshots/Screenshot%202025-09-21%20175814.png)  
+![Admin Add Movie](https://raw.githubusercontent.com/AshenIndeewara/Neflix-Clone/refs/heads/master/screenshots/Screenshot%202025-09-21%20175833.png)  
 
 ---
 
