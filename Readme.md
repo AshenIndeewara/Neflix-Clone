@@ -113,3 +113,8 @@ Build and run jar:
 mvn clean package
 java -jar target/netflix-0.0.1-SNAPSHOT.jar
 ```
+
+## 🔗 Frontend
+
+The **frontend for this project** is available here:  
+[Movie-Site (Frontend Repository)](https://github.com/AshenIndeewara/Movie-Site)
